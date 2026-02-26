@@ -26,3 +26,12 @@ form.addEventListener("submit", function (event) {
     <p><strong>Juros Totais:</strong> ${formatoMoeda.format(juros)}</p>
   `;
 });
+
+
+function sair() {
+  // Remove o usuário salvo
+  localStorage.removeItem("usuario");
+
+  // Redireciona para login
+  window.location.href = "login.html";
+};

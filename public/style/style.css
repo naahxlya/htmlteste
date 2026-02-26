@@ -85,3 +85,12 @@ button:hover {
   align-items: center;
   align-self: center;
 }
+
+.btn-sair {
+  margin-top: 15px;
+  background: #ef4444;
+}
+
+.btn-sair:hover {
+  background: #dc2626;
+}
