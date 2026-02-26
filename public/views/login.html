@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema - Login</title>
+<title>Login</title>
 
 <style>
 * {
@@ -53,7 +53,6 @@ input {
   border-radius: 6px;
   border: 1px solid #cbd5e1;
   outline: none;
-  transition: 0.2s;
 }
 
 input:focus {
@@ -82,55 +81,27 @@ button:hover {
   font-size: 14px;
   color: red;
 }
-
-/* Tela de boas-vindas */
-.bem-vindo {
-  display: none;
-  text-align: center;
-}
-
-.bem-vindo h2 {
-  color: #1e293b;
-  margin-bottom: 10px;
-}
-
-.bem-vindo p {
-  color: #475569;
-}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+  <h1>Login</h1>
 
-  <!-- LOGIN -->
-  <div id="login-page">
-    <h1>Login</h1>
-
-    <div class="input-group">
-      <label>Usuário</label>
-      <input type="text" id="usuario">
-    </div>
-
-    <div class="input-group">
-      <label>Senha</label>
-      <input type="password" id="senha">
-    </div>
-
-    <button onclick="entrar()">Entrar</button>
-
-    <div class="mensagem" id="mensagem"></div>
+  <div class="input-group">
+    <label>Usuário</label>
+    <input type="text" id="usuario">
   </div>
 
-  <!-- BEM VINDO -->
-  <div class="bem-vindo" id="home-page">
-    <h2 id="titulo-bemvindo"></h2>
-    <p>Você entrou no sistema com sucesso.</p>
-    <br>
-    <button onclick="voltar()">Sair</button>
+  <div class="input-group">
+    <label>Senha</label>
+    <input type="password" id="senha">
   </div>
 
+  <button onclick="entrar()">Entrar</button>
+
+  <div class="mensagem" id="mensagem"></div>
 </div>
 
 <script>
@@ -139,27 +110,16 @@ function entrar() {
   const senha = document.getElementById("senha").value;
   const mensagem = document.getElementById("mensagem");
 
-  // Se quiser permitir até campos vazios, pode remover esse if
   if (usuario === "" || senha === "") {
     mensagem.textContent = "Digite qualquer coisa para entrar.";
     return;
   }
 
-  // Sempre entra, independente do que foi digitado
-  document.getElementById("login-page").style.display = "none";
-  document.getElementById("home-page").style.display = "block";
+  // Salva o nome para usar na calculadora
+  localStorage.setItem("usuario", usuario);
 
-  document.getElementById("titulo-bemvindo").textContent =
-    "Seja bem-vindo, " + usuario + "!";
-}
-
-function voltar() {
-  document.getElementById("login-page").style.display = "block";
-  document.getElementById("home-page").style.display = "none";
-
-  document.getElementById("usuario").value = "";
-  document.getElementById("senha").value = "";
-  document.getElementById("mensagem").textContent = "";
+  // Redireciona para index.html (mesma pasta)
+  window.location.href = "index.html";
 }
 </script>
 
