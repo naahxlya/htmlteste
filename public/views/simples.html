@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juros Simples</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.top-buttons {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.top-buttons a {
+  background: #10b981;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.top-buttons a:hover {
+  background: #059669;
+}
+
+.container {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #334155;
+}
+
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+.resultado {
+  margin-top: 20px;
+  background: #f1f5f9;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-buttons">
+  <a href="index.html">Juros Compostos</a>
+  <a href="calculadora-aporte.html">Aporte</a>
+  <a href="relatorio.html">Relatório</a>
+  <a href="login.html">Sair</a>
+</div>
+
+<div class="container">
+  <h1>Calculadora de Juros Simples</h1>
+
+  <div class="input-group">
+    <label>Capital Inicial (R$)</label>
+    <input type="number" id="capital">
+  </div>
+
+  <div class="input-group">
+    <label>Taxa (% ao mês)</label>
+    <input type="number" id="taxa" step="0.01">
+  </div>
+
+  <div class="input-group">
+    <label>Tempo (meses)</label>
+    <input type="number" id="tempo">
+  </div>
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+function calcular() {
+  const capital = parseFloat(document.getElementById("capital").value) || 0;
+  const taxa = (parseFloat(document.getElementById("taxa").value) || 0) / 100;
+  const tempo = parseInt(document.getElementById("tempo").value) || 0;
+
+  if (taxa === 0 || tempo === 0) {
+    document.getElementById("resultado").innerHTML =
+      "Preencha taxa e tempo corretamente.";
+    return;
+  }
+
+  const juros = capital * taxa * tempo;
+  const montante = capital + juros;
+
+  const formato = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+
+  document.getElementById("resultado").innerHTML = `
+    <p><strong>Montante Final:</strong> ${formato.format(montante)}</p>
+    <p><strong>Juros Totais:</strong> ${formato.format(juros)}</p>
+  `;
+}
+</script>
+
+</body>
+</html>
