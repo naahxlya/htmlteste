@@ -100,6 +100,15 @@ th {
   background: #f8fafc;
   border-radius: 8px;
 }
+
+.btn-exportar {
+  background: #10b981;
+  color: white;
+}
+
+.btn-exportar:hover {
+  background: #059669;
+}
 </style>
 </head>
 
@@ -117,6 +126,9 @@ th {
   <input type="number" id="taxa" placeholder="Taxa (%) ao mês" step="0.01">
   <input type="number" id="tempo" placeholder="Tempo (meses)">
   <button class="btn-calcular" onclick="gerarRelatorio()">Gerar Relatório</button>
+  <button class="btn-exportar" onclick="exportarCSV()" disabled id="btnExportar">
+    Exportar CSV
+  </button>
 </div>
 
 <table id="tabela" style="display:none;">
@@ -191,6 +203,106 @@ function gerarRelatorio() {
     <p><strong>Juros Totais:</strong> ${formato.format(jurosTotais)}</p>
   `;
 }
+</script>
+
+<script>
+
+let dadosRelatorio = [];
+
+function voltar() {
+  window.location.href = "index.html";
+}
+
+function gerarRelatorio() {
+
+  const capitalInicial = parseFloat(document.getElementById("capital").value) || 0;
+  const aporte = parseFloat(document.getElementById("aporte").value) || 0;
+  const taxa = (parseFloat(document.getElementById("taxa").value) || 0) / 100;
+  const tempo = parseInt(document.getElementById("tempo").value) || 0;
+
+  if (taxa === 0 || tempo === 0) {
+    alert("Preencha taxa e tempo corretamente.");
+    return;
+  }
+
+  const tabela = document.getElementById("tabela");
+  const tbody = tabela.querySelector("tbody");
+  const resumo = document.getElementById("resumo");
+
+  tbody.innerHTML = "";
+  dadosRelatorio = [];
+  tabela.style.display = "table";
+
+  let saldo = capitalInicial;
+  let totalInvestido = capitalInicial;
+
+  const formato = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+
+  for (let mes = 1; mes <= tempo; mes++) {
+
+    const inicioMes = saldo;
+    const juros = inicioMes * taxa;
+    saldo = inicioMes + juros + aporte;
+    totalInvestido += aporte;
+
+    dadosRelatorio.push({
+      mes: mes,
+      inicio: inicioMes,
+      juros: juros,
+      final: saldo
+    });
+
+    const linha = `
+      <tr>
+        <td>${mes}</td>
+        <td>${formato.format(inicioMes)}</td>
+        <td>${formato.format(juros)}</td>
+        <td>${formato.format(saldo)}</td>
+      </tr>
+    `;
+
+    tbody.innerHTML += linha;
+  }
+
+  const jurosTotais = saldo - totalInvestido;
+
+  resumo.innerHTML = `
+    <p><strong>Total Investido:</strong> ${formato.format(totalInvestido)}</p>
+    <p><strong>Montante Final:</strong> ${formato.format(saldo)}</p>
+    <p><strong>Juros Totais:</strong> ${formato.format(jurosTotais)}</p>
+  `;
+
+  document.getElementById("btnExportar").disabled = false;
+}
+
+function exportarCSV() {
+
+  if (dadosRelatorio.length === 0) {
+    alert("Gere o relatório antes de exportar.");
+    return;
+  }
+
+  let csv = "Mes,Valor Inicial,Juros do Mes,Valor Final\n";
+
+  dadosRelatorio.forEach(item => {
+    csv += `${item.mes},${item.inicio},${item.juros},${item.final}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+
+  link.setAttribute("href", url);
+  link.setAttribute("download", "relatorio_financeiro.csv");
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 </script>
 
 </body>
